@@ -1,0 +1,105 @@
+{
+  "package":{
+    "elements":{
+      "categories":[
+        
+      ],
+      "snippets":[
+        {
+          "source":0,
+          "property_preprocess":false,
+          "description":"",
+          "editor_type":0,
+          "cache_type":0,
+          "locked":false,
+          "properties":[
+            
+          ],
+          "moduleguid":"",
+          "static":false,
+          "static_file":"",
+          "name":"moc_hooks",
+          "file":"moc_hooks.snippet.php"
+        },
+        {
+          "source":0,
+          "property_preprocess":false,
+          "description":"",
+          "editor_type":0,
+          "cache_type":0,
+          "locked":false,
+          "properties":[
+            
+          ],
+          "moduleguid":"",
+          "static":false,
+          "static_file":"",
+          "name":"moc_getNotifications",
+          "file":"moc_getnotifications.snippet.php"
+        },
+        {
+          "source":0,
+          "property_preprocess":false,
+          "description":"",
+          "editor_type":0,
+          "cache_type":0,
+          "locked":false,
+          "properties":[
+            
+          ],
+          "moduleguid":"",
+          "static":false,
+          "static_file":"",
+          "name":"moc_test",
+          "file":"moc_test.snippet.php"
+        },
+        {
+          "source":0,
+          "property_preprocess":false,
+          "description":"",
+          "editor_type":0,
+          "cache_type":0,
+          "locked":false,
+          "properties":[
+            
+          ],
+          "moduleguid":"",
+          "static":false,
+          "static_file":"",
+          "name":"moc_collectComments",
+          "file":"moc_collectcomments.snippet.php"
+        },
+        {
+          "source":0,
+          "property_preprocess":false,
+          "description":"",
+          "editor_type":0,
+          "cache_type":0,
+          "locked":false,
+          "properties":[
+            
+          ],
+          "moduleguid":"",
+          "static":false,
+          "static_file":"",
+          "name":"moc_sendtest",
+          "file":"moc_sendtest.snippet.php"
+        }
+      ],
+      "chunks":[
+ 
+      ],
+      "templates":[
+        
+      ],
+      "plugins":[
+        
+      ]
+    }
+  },
+  "name":"matrixorgclient",
+  "lowCaseName":"matrixorgclient",
+  "description":"",
+  "author":"",
+  "version":"1.0.0-beta"
+}
