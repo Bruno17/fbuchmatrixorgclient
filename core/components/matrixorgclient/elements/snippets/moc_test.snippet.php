@@ -1,5 +1,5 @@
 <?php
-$mocCorePath = realpath($modx->getOption('moc.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
+$mocCorePath = realpath($modx->getOption('matrixorgclient.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
 $moc = $modx->getService('matrixorgclient', 'MatrixOrgClient', $mocCorePath . 'model/matrixorgclient/');
 
 $fbuchCorePath = realpath($modx->getOption('fbuch.core_path', null, $modx->getOption('core_path') . 'components/fbuch')) . '/';

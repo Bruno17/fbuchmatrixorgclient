@@ -36,7 +36,7 @@ class mocHooksProcessor extends modProcessor {
         $action = $modx->getOption('action', $scriptProperties, '');
         //echo '<pre>' . print_r($date_object->toArray(), 1) . '</pre>';
         //die();
-        $mocCorePath = realpath($modx->getOption('moc.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
+        $mocCorePath = realpath($modx->getOption('matrixorgclient.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
         $moc = $modx->getService('matrixorgclient', 'MatrixOrgClient', $mocCorePath . 'model/matrixorgclient/');
 
         if ($moc->riot_isactive) {

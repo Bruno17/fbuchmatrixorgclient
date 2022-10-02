@@ -1,5 +1,5 @@
 <?php
-$mocCorePath = realpath($modx->getOption('moc.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
+$mocCorePath = realpath($modx->getOption('matrixorgclient.core_path', null, $modx->getOption('core_path') . 'components/matrixorgclient')) . '/';
 $moc = $modx->getService('matrixorgclient', 'MatrixOrgClient', $mocCorePath . 'model/matrixorgclient/');
 
 if ($moc->riot_isactive){
@@ -15,6 +15,8 @@ $fbuch = $modx->getService('fbuch', 'Fbuch', $fbuchCorePath . 'model/fbuch/');
 
 
 $result = $moc->login();
+$username = '@' . $moc->username . ':matrix.org';
+$emailsender = $modx->getOption('emailsender');
 
 if (!class_exists('MocCollectComments')) {
     class MocCollectComments {
@@ -223,17 +225,17 @@ if ($collection = $modx->getIterator('fbuchDate', $c)) {
                                 $name_id = $name_o->get('id');
                                 $comment_o->set('member_id', $name_id);
                             } else {
-                                if ($sender != '@rgmarktheidenfeld:matrix.org') {
+                                if ($sender != $username) {
                                     $message = "$sender \n";
                                     $message .= "Wir konnten Dich im Fahrtenbuchsystem nicht zuordnen.\n";
-                                    $message .= "Dein momentaner Riot - Benutzername ist bei uns nicht eingetragen\n";
-                                    $message .= "Sende uns Deinen registrierten Riot - Benutzernamen per Mail an info@rgmarktheidenfeld.de oder per Riot an @BrunoP:matrix.org\n";
+                                    $message .= "Dein momentaner Matrix - Benutzername ist bei uns nicht eingetragen\n";
+                                    $message .= "Sende uns Deinen registrierten Matrix - Benutzernamen per Mail an $emailsender \n";
                                     $message .= "Wir tragen diesen dann ins Fahrtenbuchsystem ein, damit wir Dich in Zukunft zuordnen können.\n";
                                     $api->send($room_id, 'm.room.message', array('body' => $message, 'msgtype' => 'm.text'));
                                 }
 
                             }
-                            if ($sender != '@rgmarktheidenfeld:matrix.org') {
+                            if ($sender != $username) {
                                 $comment_o->set('riot_user_id', $sender);
                                 $comment_o->set('date_id', $date_id);
                                 $comment_o->set('riot_event_id', $riot_event_id);
