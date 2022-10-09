@@ -55,6 +55,7 @@ class mocSendCommentProcessor extends mocBaseProcessor {
                     //all is fine
                     break;
                 case '':
+                case '401':    
                     $rescheduled = $this->reschedule();
                     $this->run->addError('Server antwortet scheinbar nicht', array(
                         'date_id' => $this->date_object->get('id'),

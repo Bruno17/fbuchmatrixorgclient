@@ -39,6 +39,7 @@ class mocKickUsersFromPastRoomProcessor extends mocBaseProcessor {
                     $this->date_object->save();
                     break;
                 case '':
+                    case '401':    
                     $rescheduled = $this->reschedule();
                     $this->run->addError('Server antwortet scheinbar nicht', array(
                         'date_id' => $this->date_object->get('id'),

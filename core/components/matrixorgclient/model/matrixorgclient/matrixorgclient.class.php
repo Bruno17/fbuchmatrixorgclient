@@ -99,6 +99,7 @@ class MatrixOrgClient {
         $token_ok = false;
         $password = $this->password;
         $username = $this->username;
+        $result = [];
         if (isset($group['password']) && isset($group['username'])) {
             $password = $group['password'];
             $username = $group['username'];
@@ -106,7 +107,7 @@ class MatrixOrgClient {
         $file_name = $modx->getOption('core_path') . 'config/moc_access_token.json';
         if ($chunk = file_get_contents($file_name)) {
             $tokens = json_decode($chunk,true);
-            $access_token = isset($tokens[$username]) ? $tokens['username'] : '';
+            $access_token = isset($tokens[$username]) ? $tokens[$username] : '';
         }
         if (!empty($access_token)) {
             //test, if access_token is still working
@@ -115,6 +116,7 @@ class MatrixOrgClient {
             $this->api->setAutoLoginPassword($password);
             $result = $this->api->presenceStatus('@' . $username . ':matrix.org');
             $token_ok = ($result['status'] == 200) ? true : false;
+            $this->results['token_ok'] = $result;
             /*
             if ($chunk = $modx->getObject('modChunk', array('name' => 'moc_debug'))) {
                 $chunk->set('content', print_r($result, 1));
@@ -125,7 +127,8 @@ class MatrixOrgClient {
         if (!$token_ok) {
             $result = $this->api->login($username, $password, true);
             //echo '<pre>'. $username . $password . print_r($result,1) . '</pre>';
-            $tokens[$username] = ($result['status'] == 200) ? $result['data']['access_token'] : null;
+            $tokens[$username] = ($result['status'] == 200) ? $result['data']['access_token'] : '';
+            $this->results['login'] = $result;
         }
 
         //store access_token
@@ -216,11 +219,16 @@ class MatrixOrgClient {
         $result = $this->login();
         //echo '<pre>' . print_r($date_object->toArray(),1) . '</pre>';
         $room_id = $date_object->get('riot_room_id');
+
         $fields = array();
         $date =  strtotime($date_object->get('date'));
         $now = strtotime('- 1 day');
         
         if ($date > $now){
+            $room_name = $this->generateRoomName($date_object);
+            $result = $this->api->updateRoom($room_id, 'm.room.name', array('name' => $room_name));
+            $this->results['updateRoom'] = $result;
+
             $space_name = $this->comingdates_space_id;
             $space_id = '1';
             $result = $this->api->putRoomToSpace($this->pastdates_space_id,$room_id);
@@ -245,17 +253,22 @@ class MatrixOrgClient {
         $this->results['putRoomToSpace'] = $result; 
                 
         return $this->results;
-    }    
+    } 
+    
+    public function generateRoomName($date_object){
+        $modx = $this->modx;
+        $modx->runSnippet('setlocale');
+        return strftime('%a %d.%m.%Y', strtotime($date_object->get('date'))) . ' ' . $date_object->get('start_time') . ' ' . $date_object->get('title');
+    }
 
     public function createDateRoom($date_object) {
         $modx = & $this->modx;
 
         $riot_room_id = $date_object->get('riot_room_id');
-        $modx->runSnippet('setlocale');
         $fields = array();
            
-        $room_name = strftime('%a %d.%m.%Y', strtotime($date_object->get('date'))) . ' ' . $date_object->get('start_time') . ' ' . $date_object->get('title');
-        
+        $room_name = $this->generateRoomName($date_object);
+
         $url = $modx->makeUrl('87','fbuch','date_id=' . $date_object->get('id') . '&riot=1&code=' . md5($date_object->get('id')),'full');
         
         $topic = 'Zusagen mit ++ Absagen mit xx Zur Terminübersicht:' . $url ;
