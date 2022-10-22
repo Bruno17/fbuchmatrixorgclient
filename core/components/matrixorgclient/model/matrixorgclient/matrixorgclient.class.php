@@ -149,7 +149,7 @@ class MatrixOrgClient {
                 "content"=> [
                   "guest_access"=> "forbidden"
                 ]
-              ],
+              ]/*,
               [
                 "type"=> "m.space.parent",
                 "content"=> [
@@ -171,7 +171,7 @@ class MatrixOrgClient {
                     ]
                   ]
                 ]
-              ],
+              ]*/,
               [
                 "type"=> "m.room.history_visibility",
                 "content"=> [

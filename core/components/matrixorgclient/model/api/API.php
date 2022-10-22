@@ -138,7 +138,12 @@ class MatrixOrg_API {
 
             case 'PUT':
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params, JSON_FORCE_OBJECT));
+                $params = is_array($params) ? $params : [];
+                if ($json_force_object || count($params)<1){
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params, JSON_FORCE_OBJECT));
+                } else {
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+                }                
                 break;
 
             case 'DELETE':
@@ -240,7 +245,6 @@ class MatrixOrg_API {
     public function connected() {
         return $this->access_token != null;
     }
-
 
     public function sync($since = null, $filter = 0) {
         $fields = array('filter' => $filter, 'timeout' => $this->request_timeout);
@@ -355,17 +359,24 @@ class MatrixOrg_API {
     public function getMembers($room_id, $fields = array()) {
         
         return $this->doRequest('client/r0/rooms/' . urlencode($room_id) . '/members', array(), 'GET', true);
-    }  
+    }
+    
+    public function getHierarchy($room_id, $fields = array()) {
+        $fields['suggested_only'] = isset($fields['suggested_only'])? $fields['suggested_only'] : 'false';
+        $fields['limit'] = isset($fields['limit'])? $fields['limit'] : 20;        
+        return $this->doRequest('client/v1/rooms/' . urlencode($room_id) . '/hierarchy', $fields, 'GET', true);
+    }     
     
     public function getJoinedMembers($room_id) {
         
         return $this->doRequest('client/r0/rooms/' . urlencode($room_id) . '/joined_members', array(), 'GET', true);
     }    
     
-    public function getState($room_id,$event_type='') {
+    public function getState($room_id,$event_type='',$state_key='') {
         
-        $event_type = !empty($event_type) ? '/' . $event_type : '';      
-        return $this->doRequest('client/r0/rooms/' . urlencode($room_id) . '/state' . $event_type, array(), 'GET', true);
+        $event_type = !empty($event_type) ? '/' . $event_type : '';
+        $state_key = !empty($state_key) ? '/' . urlencode($state_key) : '';      
+        return $this->doRequest('client/r0/rooms/' . urlencode($room_id) . '/state' . $event_type . $state_key, array(), 'GET', true);
     }    
 
     public function createRoom($fields = array()) {
@@ -393,7 +404,11 @@ class MatrixOrg_API {
     public function putRoomToSpace($space_id,$room_id,$fields = array()) {
         //remove from space with empty $fields
         return $this->doRequest('client/r0/rooms/' . urlencode($space_id) . '/state/m.space.child/' . urlencode($room_id), $fields, 'PUT', true, null, false);
-    }    
+    } 
+    public function putSpaceToRoom($space_id,$room_id,$fields = array()) {
+        //remove space from room with empty $fields
+        return $this->doRequest('client/r0/rooms/' . urlencode($room_id) . '/state/m.space.parent/' . urlencode($space_id), $fields, 'PUT', true, null, false);
+    }           
 
     public function addRoomToGroup($room_id,$group,$fields = array()) {
 
